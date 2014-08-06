@@ -4,9 +4,9 @@ RDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 libexec="/usr/libexec/is/:$RDIR/../libexec/"
 PATH="$PATH:$libexec"
 
-command=$1
+command="$1"
 
-case "$command"; in
+case "$command" in
     makemodule)
 	is-cc-makemodule $@
     ;;
