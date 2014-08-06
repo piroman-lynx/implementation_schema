@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
 command=$1
-libexec="/usr/libexec/is/:./libexec/"
+
+RDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+libexec="/usr/libexec/is/:$RDIR/../libexec/"
 PATH="$PATH:$libexec"
+
+
 
 check()
 {
