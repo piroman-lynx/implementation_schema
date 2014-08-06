@@ -5,7 +5,7 @@
 
     $ cd modules/
     $ cd cli/
-    $ cat modules/cli/cli.c
+    $ cat cli.c
     #include "module.h"
     #include "unistd.h"
     #include "stdio.h"
@@ -52,7 +52,7 @@
        }
     }
     
-    $ cat modules/cli/functions.c
+    $ cat functions.c
     
     void cli_cout (char * string) {
       printf("%d\n", string);
