@@ -1,3 +1,5 @@
+#ifndef is_cc_module
+#define is_cc_module 1
 
 struct call_description {
   const char *call;
@@ -29,3 +31,9 @@ struct module_description {
   void* exports_argc;
   void* exports_argv;
 };
+
+//void is_cc_module_explore(struct module_description);
+
+#define MODULE_REGISTER(x) static const struct module_description *module_for_explore = &x;
+
+#endif

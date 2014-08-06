@@ -1,14 +1,29 @@
 #!/usr/bin/env bash
 
-sfiles=$@
+makedescription()
+{
+    set -e
+    RDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    includePath="/usr/include/"
+    includePathPlace="$RDIR/../include/"
+    explorer="$RDIR/src/explorer.c"
+    echo "Build Explorer..."
+    gcc -O2 -I$includePath -I$includePathPlace -c $explorer -o .obj/is-cc-explorer.o
+    echo "LD..."
+    gcc -O2 .obj/is-cc-explorer.o $2 -o .obj/is-cc-explorer.out
+    .obj/is-cc-explorer.out
+    set +e
+}
+
+sfiles=`echo $@ | sed -e 's/^makemodule //g'`
 IFS=' ' read -a array <<< "$sfiles"
+echo $sfiles
+
+moduleDescription=${array[0]}
+echo "Module description: $moduleDescription"
 unset "array[0]"
 
-moduleDescription=${array[1]}
-echo "Module description: $moduleDescription"
-unset "array[1]"
-
-
+makedescription $moduleDescription $sfiles
 
 for ffile in "${array[@]}"
 do
