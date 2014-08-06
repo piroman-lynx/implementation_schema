@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 command=$1
-libexec="/usr/libexec/is/"
+libexec="/usr/libexec/is/:./libexec/"
 PATH="$PATH:$libexec"
 
 check()

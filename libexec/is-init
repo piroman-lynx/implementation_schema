@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+prefix="."
+
+if [ -d $prefix/.is ]; then
+    echo "Project already initialized";
+    exit 1;
+fi;
+
+mkdir $prefix/.is/
+mkdir $prefix/.is/modules/
+mkdir $prefix/.is/libraries/
+touch $prefix/.is/registry
