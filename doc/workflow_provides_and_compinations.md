@@ -11,7 +11,8 @@
     }
 
 Сборка:
-$ is hello_world.is hello_world.out
+
+    $ is hello_world.is hello_world.out
 
 Задача:
   Написать библиотеку выводящую в консоль Hello World, доступную по имени lib_hello_world
@@ -26,7 +27,8 @@ $ is hello_world.is hello_world.out
     }
 
 Сборка:
-$ is hello_world.is hello_world.out hello_world.so hello_world.la hello_world.la hello_world.c
+
+    $ is hello_world.is hello_world.out hello_world.so hello_world.la hello_world.la hello_world.c
 
 Задача:
   Написать бинарик использующий библиотеку lib_hello_world
@@ -41,9 +43,10 @@ $ is hello_world.is hello_world.out hello_world.so hello_world.la hello_world.la
     }
     
 Сборка:
-$ is clean
-$ is add_library hello_world.c
-$ is hello_world.is hello_world.out
+
+    $ is clean
+    $ is add_library hello_world.c
+    $ is hello_world.is hello_world.out
 
 Задача:
   Написать бинарик использующий библиотеку lib_hello_world с подменой cli на tcp<cli
