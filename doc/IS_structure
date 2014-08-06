@@ -5,6 +5,7 @@
 5. "$ is-cc" command for compile and C modules for Implementation Schema programs
 
 Commands:
+    $ is init                  - инициализация проекта
     $ is source.is elf.out     - сборка binary из source.is и использованием всех registry
     $ is source.is object.out shared.so la.la lo.lo c-source.c - сборка библиотеки в .so, .la, .lo и .c для дальнейшей сборки в IS или с помощью других компиляторов
     $ is clean                 - полностью очистить local registry
