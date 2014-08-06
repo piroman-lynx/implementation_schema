@@ -20,6 +20,6 @@ case "$command" in
 	is-cc-update $@
     ;;
     *)
-	is-cc-compile $2
+	is-cc-compile $1
     ;;
 esac

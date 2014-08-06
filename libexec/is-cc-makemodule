@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+sfiles=$@
+IFS=' ' read -a array <<< "$sfiles"
+unset "array[0]"
+
+moduleDescription=${array[1]}
+echo "Module description: $moduleDescription"
+unset "array[1]"
+
+
+
+for ffile in "${array[@]}"
+do
+    echo "Functions file: $ffile"
+done
+

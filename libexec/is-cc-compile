@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+RDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+csource=$1
+object=`echo $csource| sed -e 's/\.c/\.o/g'`
+includePath="/usr/include/"
+includePathPlace="$RDIR/../include/"
+
+set -e
+
+mkdir -p .obj
+gcc -O2 -I$includePath -I$includePathPlace -c $csource -o .obj/$object
