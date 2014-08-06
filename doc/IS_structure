@@ -9,8 +9,8 @@ Commands:
     $ is source.is elf.out     - сборка binary из source.is и использованием всех registry
     $ is source.is object.out shared.so la.la lo.lo c-source.c - сборка библиотеки в .so, .la, .lo и .c для дальнейшей сборки в IS или с помощью других компиляторов
     $ is clean                 - полностью очистить local registry
-    $ is add_library source.c  - добавить в local registry библиотеку
-    $ is add_company_library source.c     - добавить в company registry библиотеку
+    $ is add-library source.c  - добавить в local registry библиотеку
+    $ is add-company-library source.c     - добавить в company registry библиотеку
     $ is-cc cli.c              - сборка *.o файла для модулья для global или company registry
     $ is-cc makemodule a.c [b.c [c.c [d.c]]] - сборка модуля для global или company reigstry
     $ is-cc import-global ./modules/cli   - включение модулья для global reigstry
