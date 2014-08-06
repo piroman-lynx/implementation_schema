@@ -1,2 +1,25 @@
 #!/usr/bin/env bash
 
+RDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+libexec="/usr/libexec/is/:$RDIR/../libexec/"
+PATH="$PATH:$libexec"
+
+command=$1
+
+case "$command"; in
+    makemodule)
+	is-cc-makemodule $@
+    ;;
+    import-global)
+	is-cc-import-global $@
+    ;;
+    import-company)
+	is-cc-import-company $@
+    ;;
+    update)
+	is-cc-update $@
+    ;;
+    *)
+	is-cc-compile $2
+    ;;
+esac
