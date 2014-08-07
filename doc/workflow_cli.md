@@ -22,10 +22,11 @@
     
     fsm_hello_world {
       c< "Enter 0 or 1"
-      c> fsm:
+      c> fsm {
        "0": fsm_hello
        "1": fsm_world
        *: fail
+      }
     }
     
     fail {
@@ -57,10 +58,11 @@
     
     fsm_tcp_hw {
       tcp< "Send 0 or 1"
-      tcp> fsm:
+      tcp> fsm {
        "0\n": fsm_hello
        "1\n": fsm_world
        *: fail
+      }
     }
     
     ....
@@ -84,10 +86,11 @@
     
     fsm_tcp_hw {
       tcp< "Send 0 or 1"
-      tcp> fsm:
+      tcp> fsm {
        "0\n": fsm_hello
        "1\n": fsm_world
        *: fail
+      }
     }
     
     ....
