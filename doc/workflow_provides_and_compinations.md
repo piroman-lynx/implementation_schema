@@ -55,7 +55,7 @@
 
     #provide binary hello_world
     #require lib_hello_world \
-      #with_replace cli<tcp_server tcp_init as cli
+      #with_replace cli (<tcp_server tcp_init) as cli
     
     tcp_init {
       tcp<tcp_host<"127.0.0.1"
