@@ -47,7 +47,7 @@
 Реализация Implementation Schema:
   
     #provide binary fsm_tcp_hw
-    #require cli<tcp_server tcp_init as tcp
+    #require cli (<tcp_server tcp_init) as tcp
     #require cli as c
     #require fsm as fsm
     
@@ -73,7 +73,7 @@
 Реализация Implementation Schema:
     
     #provide binary fsm_tcp_hw
-    #require cli<tcp_server<threads tcp_init as tcp
+    #require cli (<tcp_server tcp_init (<threads)) tcp_init as tcp
     #require cli as c
     #require fsm as fsm
     
