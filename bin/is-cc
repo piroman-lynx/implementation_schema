@@ -16,6 +16,9 @@ case "$command" in
     import-company)
 	is-cc-import-company $@
     ;;
+    import-local)
+	is-cc-import-local $@
+    ;;
     update)
 	is-cc-update $@
     ;;

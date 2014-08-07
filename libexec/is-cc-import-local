@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+dest=$2
+name=`basename $dest`
+
+if [ ! -d .is ]; then
+    echo "Please ~cd~ to root of project"
+    exit 1;
+fi;
+
+if [ -L .is/modules/`basename $dest` ]; then
+    echo "Module already imported";
+    exit 2;
+fi;
+
+echo -n "Try..."
+
+set -e
+
+ln -s ../../$dest .is/modules/$name
+echo $name >> .is/registry
+cat .is/modules/$name/.module/description >> .is/build_index
+
+echo "OK"

@@ -11,21 +11,31 @@ makedescription()
     (set -x; gcc -O2 -I$includePath -I$includePathPlace -c $explorer -o .obj/is-cc-explorer.o)
     echo "LD..."
     (set -x; gcc -O2 -I$includePath -I$includePathPlace .obj/is-cc-explorer.o $2 -o .obj/is-cc-explorer.out)
-    .obj/is-cc-explorer.out
+    .obj/is-cc-explorer.out > .obj/description
     set +e
 }
 
 sfiles=`echo $@ | sed -e 's/^makemodule //g'`
 IFS=' ' read -a array <<< "$sfiles"
-echo $sfiles
 
 moduleDescription=${array[0]}
 echo "Module description: $moduleDescription"
 
 makedescription $moduleDescription "`echo $sfiles | sed -e 's/\.c/\.o/g' | sed -e 's/ / .obj\//g' | sed -e 's/^/.obj\//g'`"
+unset "array[0]"
+
+mkdir -p .module/
+
+set -e
 
 for ffile in "${array[@]}"
 do
     echo "Functions file: $ffile"
+    cp $ffile .module/$ffile
+    ofile=`echo $ffile | sed -e 's/\.c$/\.o/g'`
+    cp .obj/$ofile .module/$ofile
 done
 
+cp .obj/description .module/description
+
+set +e
