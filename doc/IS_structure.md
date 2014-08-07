@@ -5,6 +5,7 @@
 5. "$ is-cc" command for compile and C modules for Implementation Schema programs
 
 Commands:
+
     $ is init                  - инициализация проекта
     $ is source.is elf.out     - сборка binary из source.is и использованием всех registry
     $ is source.is object.out shared.so la.la lo.lo c-source.c - сборка библиотеки в .so, .la, .lo и .c для дальнейшей сборки в IS или с помощью других компиляторов
@@ -15,5 +16,6 @@ Commands:
     $ is-cc makemodule a.c [b.c [c.c [d.c]]] - сборка модуля для global или company reigstry
     $ is-cc import-global ./modules/cli   - включение модулья для global reigstry
     $ is-cc import-company ./modules/cli   - включение модулья для company reigstry
+    $ is-cc import-local ./modules/cli     - включение модулья для local reigstry
     $ is update company                    - обновить company reigstry для библиотек
     $ is-cc update company                    - обновить company reigstry для модулей
