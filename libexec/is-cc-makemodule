@@ -6,11 +6,11 @@ makedescription()
     RDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     includePath="/usr/include/"
     includePathPlace="$RDIR/../include/"
-    explorer="$RDIR/src/explorer.c"
+    explorer="$RDIR/../src/explorer.c"
     echo "Build Explorer..."
-    gcc -O2 -I$includePath -I$includePathPlace -c $explorer -o .obj/is-cc-explorer.o
+    (set -x; gcc -O2 -I$includePath -I$includePathPlace -c $explorer -o .obj/is-cc-explorer.o)
     echo "LD..."
-    gcc -O2 .obj/is-cc-explorer.o $2 -o .obj/is-cc-explorer.out
+    (set -x; gcc -O2 -I$includePath -I$includePathPlace .obj/is-cc-explorer.o $2 -o .obj/is-cc-explorer.out)
     .obj/is-cc-explorer.out
     set +e
 }
@@ -21,9 +21,8 @@ echo $sfiles
 
 moduleDescription=${array[0]}
 echo "Module description: $moduleDescription"
-unset "array[0]"
 
-makedescription $moduleDescription $sfiles
+makedescription $moduleDescription "`echo $sfiles | sed -e 's/\.c/\.o/g' | sed -e 's/ / .obj\//g' | sed -e 's/^/.obj\//g'`"
 
 for ffile in "${array[@]}"
 do
