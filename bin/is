@@ -48,9 +48,9 @@ case "$command" in
   ;;
   *)
     if [ `has 6 $6` == "no" ]; then
-      is-compile-library $2 $3 $4 $5 $6 $7
+      is-compile-library $1 $2 $3 $4 $5 $6
     elif [ `has 2 $2` == "no" ]; then
-      is-compile-binary $2 $3
+      is-compile-binary $1 $2
     else
       badcommand
     fi;

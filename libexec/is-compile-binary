@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+ssource=$1
+output=$2
+
+RDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+libexec="$RDIR/../libexec/"
+
+PATH="$PATH:$libexec"
+
+is-generate-makefile.php $ssource Makefile.$ssource
+
