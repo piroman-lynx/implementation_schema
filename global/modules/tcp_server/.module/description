@@ -1,0 +1,2 @@
+[module]< ARG0	:tcp_server_cout(ARG0);
+[module]> ARG0	:tcp_server_cin(ARG0);

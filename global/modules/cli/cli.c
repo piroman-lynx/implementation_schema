@@ -1,27 +1,27 @@
 #include "module.h"
-#include "tcp.h"
+#include "functions.h"
 
-#define MODULE_ERROR(x) TRANSLATION_ERROR("tcp_server", x)
+#define MODULE_ERROR(x) TRANSLATION_ERROR("cli", x)
 
 static const struct call_description cout_desc = {
   .call = "<",
   .args = 1,
   .args_array = { "char *ARG" },
-  .function = "tcp_server_cout",
+  .function = "cli_cout",
 };
 
 static const struct call_description cin_desc = {
   .call = ">",
   .args = 1,
   .args_array = { "char *ARG[4096]" },
-  .function = "tcp_server_cin",
+  .function = "cli_cin",
 };
 
-unsigned int tcp_server_exports_list_argc() {
+unsigned int cli_exports_list_argc() {
    return 2;
 }
 
-struct call_description tcp_server_exports_list_argv(unsigned int export) {
+struct call_description cli_exports_list_argv(unsigned int export) {
    switch (export) {
       case 0:
         return cout_desc;
@@ -39,8 +39,8 @@ static const struct module_description cli_description = {
   .must_init = 0,
   .may_finish = 0,
   .must_finish = 0,*/
-  .exports_argc = &tcp_server_exports_list_argc,
-  .exports_argv = &tcp_server_exports_list_argv
+  .exports_argc = &cli_exports_list_argc,
+  .exports_argv = &cli_exports_list_argv
 };
 
 int main(int argc, char* argv){

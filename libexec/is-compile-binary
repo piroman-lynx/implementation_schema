@@ -8,5 +8,6 @@ libexec="$RDIR/../libexec/"
 
 PATH="$PATH:$libexec"
 
+set -e
 is-generate-makefile.php $ssource Makefile.$ssource
-
+is-generate-c.php $ssource

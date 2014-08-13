@@ -38,10 +38,12 @@ void is_cc_register(const struct module_description is_cc_module_for_explore)
 		    sprintf(append, "%d", j);
 		    memcpy(str+sizeof(char)*k+1, append, strlen(append)*sizeof(char));
 		    offset+=strlen(append);
+		    printf("ARG%s", append);
 		    free(append);
 		}
 	    }
-	    printf("%s", str);
+	    //printf("%s", str);
+	    //printf("ARG");
 	    free(str);
 	    if (j+1 < cd.args) {
 		printf(",");
