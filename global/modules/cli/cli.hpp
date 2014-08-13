@@ -1,22 +1,27 @@
+#include "module.hpp"
+#include <string.h>
 
-class cli<PipeModule {
+class cli : public PipeModule {
 
-  private:
-    static cli instance* = 0;
-    char *config_endl;
+  protected:
+    static cli* instance;
+    char* config_endl;
 
   public:
 
-    PipeModule ( PipeModule* headPassParent );
+    cli ( PipeModule* headPassParent ) : PipeModule ( headPassParent ) {
+	config_endl = new char[3];
+	strcpy(config_endl, "\r\n");
+    }
 
-    PipeModule<PipeModule ( void );
+    cli ( void ) : PipeModule ( ) {
+	config_endl = new char[3];
+	strcpy(config_endl, "\r\n");
+    }
 
-    virtual PipeModule getInstance(PipeModule* headPassParent);
-
-    virtual PipeModule getInstance();
-
+    static PipeModule* getInstance(PipeModule* headPassParent);
+    static PipeModule* getInstance();
     virtual char* cin();
-
     virtual void cout(char* in);
 
-}
+};

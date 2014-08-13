@@ -1,35 +1,29 @@
 #include "cli.hpp"
+#include <iostream>
+#include <stdio.h>
 
-    cli::PipeModule ( PipeModule* headPassParent ) {
-	config_endl = new char[3];
-	strcpy(config_endl, "\r\n");
-    }
+    cli* cli::instance = 0;
 
-    cli::PipeModule<PipeModule ( void ) {
-	config_endl = new char[3];
-	strcpy(config_endl, "\r\n");
-    }
-
-    PipeModule cli::getInstance(PipeModule* headPassParent) {
+    PipeModule* cli::getInstance(PipeModule* headPassParent) {
 	if ((long)instance == 0) {
-	    instance = new PipeModule(headPassParent);
+	    instance = new cli(headPassParent);
 	}
 	return instance;
     }
 
-    cli::PipeModule getInstance() {
+    PipeModule* cli::getInstance() {
 	if ((long)instance == 0) {
-	    instance = new PipeModule();
+	    instance = new cli();
 	}
 	return instance;
     }
 
     char* cli::cin() {
 	if ((long)passParent != 0) {
-	    return passParent.cin();
+	    return passParent->cin();
 	}
 	char *buffer;
-	cin > buffer;
+	std::cin > buffer;
 	return buffer;
     }
 
@@ -38,8 +32,8 @@
 	bzero(format, (strlen(in)+1+strlen(config_endl))*sizeof(char));
 	sprintf(format, "%s%s", in, config_endl);
 	if ((long)passParent != 0) {
-	    passParent.cout(format);
+	    passParent->cout(format);
 	    return;
 	}
-	cout < format;
+	std::cout < format;
     }

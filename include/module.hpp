@@ -8,18 +8,18 @@ class PipeModule {
 
  public:
     PipeModule ( void ) {
-	passParent = 0;
+        passParent = 0;
     }
 
     PipeModule ( PipeModule* headPassParent ) {
-	passParent = headPassParent;
+        passParent = headPassParent;
     }
 
-    virtual PipeModule getInstance(PipeModule* headPassParent) = 0;
-    virtual PipeModule getInstance() = 0;
+    static PipeModule* getInstance(PipeModule* headPassParent);
+    static PipeModule* getInstance();
     virtual char* cin() = 0;
     virtual void cout(char*) = 0;
-}
+};
 
 struct module_description {
     
