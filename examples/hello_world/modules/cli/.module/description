@@ -1,0 +1,2 @@
+[module]< ARG0	:cli_cout(char *ARG0);
+[module]> ARG0	:cli_cin(char *ARG0[4096]);

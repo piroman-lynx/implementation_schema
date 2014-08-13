@@ -1,0 +1,6 @@
+#provide binary hello_world
+#require cli as c
+
+hello_world {
+  c< "Hello world"
+}

@@ -1,0 +1,9 @@
+all:
+	mkdir -p .obj/
+	gcc -O2 -c .src/hello_world.c -o .obj/hello_world.o
+	mkdir -p .obj/modules/cli
+	gcc -O2 -c /home/lynx/projects/test_is/.is/modules//cli/functions.c -o .obj/modules/cli/functions.o
+	gcc -O2 .obj/hello_world.o  .obj/modules/cli/functions.o -o .obj/hello_world.out
+
+clean:
+	rm -rf .obj/
