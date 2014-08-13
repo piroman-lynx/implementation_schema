@@ -72,6 +72,7 @@ foreach ($checkList as $one) {
 }
 
 $modules = getcwd() . "/" . ".is/modules/";
+$topdo = "";
 $requires_make = "";
 $requires = "";
 $includes = "";
@@ -81,7 +82,7 @@ foreach ($state['required'] as $name => $realnamear) {
     if (
         file_exists($modules.DIRECTORY_SEPARATOR.$realname)
        ) {
-	$requires_make .= "	mkdir -p .obj/modules/$realname\n";
+	$topdo .= "	mkdir -p .obj/modules/$realname\n";
 	$c_list = popen("ls -1 $modules/$realname/*.c", 'r');
 	while (($c_file = trim(fgets($c_list))) != false){
 	    if (basename($c_file) != ($realname . ".c")) {
@@ -92,7 +93,7 @@ foreach ($state['required'] as $name => $realnamear) {
 	}
 	pclose($c_list);
 	$h_file = "$modules/$realname/$realname.h";
-	$requires_make .= "	cp $h_file .obj/modules/$realname/\n";
+	$topdo .= "	cp $h_file .obj/modules/$realname/\n";
 	$includes .= " -I.obj/modules/$realname/";
     } else {
 	doerror("Unknown include: " . $realname);
@@ -107,11 +108,12 @@ if (count($errors) > 0) {
 }
 
 $makefilename = $argv[2];
-$makefile = "all:\n";
+$makefile = "\n\nall:\n";
 $makefile .= "	mkdir -p .obj/\n";
-$makefile .= "	gcc -O2 -c .src/$csource -o .obj/$coutput\n";
+$makefile .= $topdo;
+$makefile .= "	gcc -O2 $includes -c .src/$csource -o .obj/$coutput\n";
 $makefile .= $requires_make;
-$makefile .= "	gcc -O2 $includes .obj/$coutput $requires -o .obj/$outname\n\n";
+$makefile .= "	gcc -O2 $includes .obj/$coutput $requires -o $outname\n\n";
 $makefile .= "clean:\n";
 $makefile .= "	rm -rf .obj/\n";
 

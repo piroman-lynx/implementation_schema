@@ -66,7 +66,7 @@ while (($line = fgets($file)) !== false) {
 	}
     } else if (preg_match('/^([A-z0-9]+)\s+{$/', $line, $matches)) {
 	if($matches[1] == $entryPointName){
-	    echo "!int main(int argc, char* argv[]);\n";
+	    echo "!int main(int argc, char* argv[]) {\n";
 	}
     } else if ($line == "}") {
 	echo "!}\n";

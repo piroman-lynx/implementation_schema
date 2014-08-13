@@ -3,7 +3,7 @@
 
 //call as: cli< "string"
 void cli_cout (char * string) {
-  printf("%d\n", string);
+  printf("%s\n", string);
 }
 
 //call as: cli> buffer

@@ -1,2 +1,3 @@
 cli< ARG0	:cli_cout(ARG0);
-cli> ARG0	:cli_cin(ARG0);
+cli> ARG0	:cli_cin(ARG0);[module]< ARG0	:cli_cout(ARG0);
+[module]> ARG0	:cli_cin(ARG0);
