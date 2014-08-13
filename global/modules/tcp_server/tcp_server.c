@@ -1,5 +1,5 @@
 #include "module.h"
-#include "tcp.h"
+#include "tcp_server.h"
 
 #define MODULE_ERROR(x) TRANSLATION_ERROR("tcp_server", x)
 

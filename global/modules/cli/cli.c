@@ -1,5 +1,5 @@
 #include "module.h"
-#include "functions.h"
+#include "cli.h"
 
 #define MODULE_ERROR(x) TRANSLATION_ERROR("cli", x)
 

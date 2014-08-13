@@ -74,6 +74,7 @@ foreach ($checkList as $one) {
 $modules = getcwd() . "/" . ".is/modules/";
 $requires_make = "";
 $requires = "";
+$includes = "";
 
 foreach ($state['required'] as $name => $realnamear) {
     list($realname) = $realnamear;
@@ -90,6 +91,9 @@ foreach ($state['required'] as $name => $realnamear) {
 	    }
 	}
 	pclose($c_list);
+	$h_file = "$modules/$realname/$realname.h";
+	$requires_make .= "	cp $h_file .obj/modules/$realname/\n";
+	$includes .= " -I.obj/modules/$realname/";
     } else {
 	doerror("Unknown include: " . $realname);
     }
@@ -107,7 +111,7 @@ $makefile = "all:\n";
 $makefile .= "	mkdir -p .obj/\n";
 $makefile .= "	gcc -O2 -c .src/$csource -o .obj/$coutput\n";
 $makefile .= $requires_make;
-$makefile .= "	gcc -O2 .obj/$coutput $requires -o .obj/$outname\n\n";
+$makefile .= "	gcc -O2 $includes .obj/$coutput $requires -o .obj/$outname\n\n";
 $makefile .= "clean:\n";
 $makefile .= "	rm -rf .obj/\n";
 
