@@ -22,9 +22,10 @@ class PipeModule {
 };
 
 struct module_description {
-    
+    char *className;
 };
 
+void is_cc_register(const struct module_description md);
 
 #define MODULE_REGISTER(x) is_cc_register(x);
 

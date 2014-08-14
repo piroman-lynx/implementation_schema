@@ -25,3 +25,4 @@ class cli : public PipeModule {
     virtual void cout(char* in);
 
 };
+
