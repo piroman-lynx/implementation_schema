@@ -3,7 +3,7 @@
 RDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 csource=$1
-object=`echo $csource| sed -e 's/\.c/\.o/g'`
+object=`echo $csource| sed -e 's/\.cpp/\.o/g'`
 includePath="/usr/include/"
 includePathPlace="$RDIR/../include/"
 

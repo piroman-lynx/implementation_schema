@@ -1,6 +1,8 @@
 #ifndef is_cc_module_hpp
 #define is_cc_module_hpp 1
 
+#include <string>
+
 class PipeModule {
 
  protected:
@@ -22,7 +24,7 @@ class PipeModule {
 };
 
 struct module_description {
-    char *className;
+    const char *className;
 };
 
 void is_cc_register(const struct module_description md);
