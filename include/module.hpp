@@ -3,6 +3,17 @@
 
 #include <string>
 
+struct bitPack {
+    char *bytes;
+    long long len;
+};
+
+class ModuleConfig {
+ public:
+    char* getString(const char *name);
+    int getInteger(const char *name);
+};
+
 class PipeModule {
 
  protected:
@@ -19,8 +30,18 @@ class PipeModule {
 
     static PipeModule* getInstance(PipeModule* headPassParent);
     static PipeModule* getInstance();
-    virtual char* cin() = 0;
-    virtual void cout(char*) = 0;
+    virtual bitPack cin() = 0;
+    virtual void cout(bitPack*) = 0;
+};
+
+class PoolModule {
+
+ public:
+    PoolModule ( void ) { }
+
+    static PoolModule* getInstance();
+    virtual void configure(ModuleConfig *config) = 0;
+    virtual void startPool() = 0;
 };
 
 struct module_description {
