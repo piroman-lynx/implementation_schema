@@ -48,6 +48,7 @@ class PoolModule {
     static PoolModule* getInstance();
     virtual void configure(ModuleConfig *config) = 0;
     virtual void startPool() = 0;
+    virtual void startPool(PipeModule* headPassParent) = 0;
 };
 
 struct module_description {

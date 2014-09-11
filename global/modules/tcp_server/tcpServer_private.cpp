@@ -1,4 +1,5 @@
 #include "tcpServer.hpp"
+#include "tcpConnection.hpp"
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -32,5 +33,18 @@ void tcpServer::configure(ModuleConfig *config)
 
 void tcpServer::startPool()
 {
-    int clientSocket = accept(serverSocket, 0, 0);
+    for (;;) {
+	int clientSocket = accept(serverSocket, 0, 0);
+	tcpConnection *conn = (tcpConnection*)tcpConnection::getInstance();
+	conn->configure(clientSocket);
+    }
+}
+
+void tcpServer::startPool(PipeModule* headPassParent)
+{
+    for (;;) {
+	int clientSocket = accept(serverSocket, 0, 0);
+	tcpConnection *conn = (tcpConnection*)tcpConnection::getInstance(headPassParent);
+	conn->configure(clientSocket);
+    }
 }

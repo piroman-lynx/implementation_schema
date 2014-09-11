@@ -22,6 +22,7 @@ class tcpServer : public PoolModule {
     static PoolModule* getInstance();
     virtual void configure(ModuleConfig *config);
     virtual void startPool();
+    virtual void startPool(PipeModule* headPassParent);
 
 };
 
