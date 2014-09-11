@@ -36,6 +36,6 @@ void cli::cout(bitPack* in) {
         passParent->cout(in);
         return;
     }
-    std::cout < in->bytes;
+    std::cout << in->bytes;
 }
 

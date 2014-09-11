@@ -13,10 +13,24 @@ $inBlock = false;
 $offset = "";
 $entryPoint = '';
 $localVariables = array();
+global $iterator;
+$iterator=1000;
 
 function factoryExpression($expression) {
+    global $iterator;
     if (preg_match('/^("[^"]*")$/',$expression, $matches)) { //string (without excapeing)
-	return array(end($matches), "");
+	$rr = end($matches);
+	$varc = 'var_'.$iterator;
+	$iterator++;
+	$var = 'var_'.$iterator;
+	$iterator++;
+	$localVariables []= $var;
+	$localVariables []= $varc;
+	return array($var, "char {$varc}[] = $rr;
+bitPack *$var = new bitPack();
+{$var}->len = (strlen($varc)+1)*sizeof(char);
+{$var}->bytes = new char [{$var}->len];
+strcpy({$var}->bytes, $varc);\n");
     }
     throw new BadExpression($expression);
 }
@@ -32,7 +46,7 @@ foreach ($source as $row) {
 	}
 	continue;
     }
-    
+
     //require
     if (preg_match('/^#require\s+(.*)$/', $row, $required)) {
 	$required = end($required); // "cli as c" or "cli"
@@ -79,7 +93,7 @@ foreach ($source as $row) {
 	if (isset($modulesIndex[$module])) {
 	    if (empty($modulesInitialized[$module])) {
 		$modulesInitialized[$module] = true;
-		echo $offset . $modulesIndex[$module] . "_local = " . $modulesIndex[$module] . "::getInstance();\n";
+		echo $offset . $modulesIndex[$module] . "* ". $modulesIndex[$module] . "_local = (".$modulesIndex[$module]."*)" . $modulesIndex[$module] . "::getInstance();\n";
 	    }
 	}
 	
@@ -90,10 +104,10 @@ foreach ($source as $row) {
 	//run command
 	switch ($command) {
 	    case '<': //cout
-		echo $offset .  $modulesIndex[$module] . "_local.cout($varName);\n";
+		echo $offset .  $modulesIndex[$module] . "_local->cout($varName);\n";
 		break;
 	    case '>': //cin
-		echo $offset .  "$varName = " . $modulesIndex[$module] . "_local.cin();\n";
+		echo $offset .  "$varName = " . $modulesIndex[$module] . "_local->cin();\n";
 		break;
 	}
 //	var_dump($module, $command, $expression);

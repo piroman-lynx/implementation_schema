@@ -3,10 +3,10 @@
 all:
 	mkdir -p .obj/
 	mkdir -p .obj/modules/cli
-	cp /home/piroman/projects/implementation_schema/examples/hello_world/.is/modules//cli/cli.h .obj/modules/cli/
-	gcc -O2  -I.obj/modules/cli/ -c .src/hello_world.c -o .obj/hello_world.o
-	gcc -O2 -c /home/piroman/projects/implementation_schema/examples/hello_world/.is/modules//cli/functions.c -o .obj/modules/cli/functions.o
-	gcc -O2  -I.obj/modules/cli/ .obj/hello_world.o  .obj/modules/cli/functions.o -o hello_world.out
+	cp /home/piroman/projects/implementation_schema/examples/hello_world/.is/modules//cli/cli.hpp .obj/modules/cli/
+	g++ -O2  -I.obj/modules/cli/ -I/home/piroman/projects/implementation_schema/libexec/../include/ -c .src/hello_world.cpp -o .obj/hello_world.o
+	cp /home/piroman/projects/implementation_schema/examples/hello_world/.is/modules//cli/.module/cli_private.o .obj/modules/cli/cli_private.o
+	g++ -O2  -I.obj/modules/cli/ -I/home/piroman/projects/implementation_schema/libexec/../include/ .obj/hello_world.o  .obj/modules/cli/cli_private.o -o hello_world.out
 
 clean:
 	rm -rf .obj/

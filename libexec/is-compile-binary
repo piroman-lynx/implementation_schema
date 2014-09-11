@@ -2,7 +2,7 @@
 
 ssource=$1
 output=$2
-csource=`echo $ssource | sed -e 's/\.is/.c/g'`
+csource=`echo $ssource | sed -e 's/\.is/.cpp/g'`
 
 RDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 libexec="$RDIR/../libexec/"
@@ -12,12 +12,14 @@ PATH="$PATH:$libexec"
 set -e
 is-generate-makefile.php $ssource Makefile.$ssource
 is-generate-c.php $ssource > .obj/$ssource.tmp
-set +e
-if [ "`cat .obj/$ssource.tmp | fgrep -v '!' | wc -l`" != "0" ]; then
-    echo "Translation Error: you have not translated code:"
-    cat .obj/$ssource.tmp | fgrep -v '!'
-fi
-set -e
+mkdir -p .src
+cp .obj/$ssource.tmp .src/$ssource.cpp
+#set +e
+#if [ "`cat .obj/$ssource.tmp | fgrep -v '!' | wc -l`" != "0" ]; then
+#    echo "Translation Error: you have not translated code:"
+#    cat .obj/$ssource.tmp | fgrep -v '!'
+#fi
+#set -e
 cat .obj/hello_world.is.tmp  | sed -e 's/^!//g' > .src/$csource
 
 make -f Makefile.$ssource
