@@ -2,6 +2,7 @@
 #define is_cc_module_hpp 1
 
 #include <string>
+#include <map>
 
 struct bitPack {
     char *bytes;
@@ -9,8 +10,13 @@ struct bitPack {
 };
 
 class ModuleConfig {
+ private:
+    std::map<std::string, std::string> strings;
+    std::map<std::string, int> ints;
  public:
-    char* getString(const char *name);
+    void setString(const char *name, char *value);
+    void setInteger(const char *name, int value);
+    const char* getString(const char *name);
     int getInteger(const char *name);
 };
 

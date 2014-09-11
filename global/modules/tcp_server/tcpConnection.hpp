@@ -1,3 +1,7 @@
+
+#ifndef tcpConnection_hpp
+#define tcpConnection_hpp 1
+
 #include "module.hpp"
 
 #include "unistd.h"
@@ -23,3 +27,4 @@ class tcpConnection : public PipeModule {
 
 };
 
+#endif

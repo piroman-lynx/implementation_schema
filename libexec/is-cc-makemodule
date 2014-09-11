@@ -7,10 +7,12 @@ makedescription()
     includePath="/usr/include/"
     includePathPlace="$RDIR/../include/"
     explorer="$RDIR/../src/explorer.cpp"
+    module="$RDIR/../src/module.cpp"
     echo "Build Explorer..."
     (set -x; g++ -O2 -I$includePath -I$includePathPlace -c $explorer -o .obj/is-cc-explorer.o)
+    (set -x; g++ -O2 -I$includePath -I$includePathPlace -c $module -o .obj/is-cc-module.o)
     echo "LD..."
-    (set -x; g++ -O2 -I$includePath -I$includePathPlace .obj/is-cc-explorer.o $2 -o .obj/is-cc-explorer.out)
+    (set -x; g++ -O2 -I$includePath -I$includePathPlace .obj/is-cc-explorer.o .obj/is-cc-module.o $2 -o .obj/is-cc-explorer.out)
     .obj/is-cc-explorer.out > .obj/description
     set +e
 }
@@ -27,6 +29,8 @@ unset "array[0]"
 mkdir -p .module/
 
 set -e
+
+cp .obj/is-cc-module.o .module/is-cc-module.o
 
 for ffile in "${array[@]}"
 do

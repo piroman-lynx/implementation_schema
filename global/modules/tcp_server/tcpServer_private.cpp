@@ -1,7 +1,7 @@
 #include "tcpServer.hpp"
 
 #include <unistd.h>
-#include <sys/types.h>          /* See NOTES */
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <strings.h>

@@ -19,23 +19,23 @@ PipeModule* cli::getInstance() {
     return instance;
 }
 
-char* cli::cin() {
+bitPack cli::cin() {
     if ((long)passParent != 0) {
         return passParent->cin();
     }
-    char *buffer;
-    std::cin > buffer;
-    return buffer;
+    bitPack ret;
+    std::string input;
+    std::getline (std::cin, input);
+    ret.bytes = (char *)input.c_str();
+    ret.len = input.size()+1;
+    return ret;
 }
 
-void cli::cout(char* in) {
-    char *format = new char[strlen(in)+2];
-    bzero(format, (strlen(in)+1+strlen(config_endl))*sizeof(char));
-    sprintf(format, "%s%s", in, config_endl);
+void cli::cout(bitPack* in) {
     if ((long)passParent != 0) {
-        passParent->cout(format);
+        passParent->cout(in);
         return;
     }
-    std::cout < format;
+    std::cout < in->bytes;
 }
 

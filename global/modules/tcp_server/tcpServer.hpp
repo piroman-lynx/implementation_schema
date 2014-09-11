@@ -1,3 +1,7 @@
+
+#ifndef tcpServer_hpp
+#define tcpServer_hpp
+
 #include "module.hpp"
 
 #include <unistd.h>
@@ -9,7 +13,7 @@ class tcpServer : public PoolModule {
 
   public:
 
-    tcpServer ( void ) : PoolModule ( ) {}
+//    tcpServer ( void ) : PoolModule ( ) {}
 
     ~tcpServer () {
         close(serverSocket);
@@ -21,3 +25,4 @@ class tcpServer : public PoolModule {
 
 };
 
+#endif
