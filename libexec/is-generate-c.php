@@ -7,77 +7,99 @@ $srcdir = getcwd(). "/.src/";
 $ssource=$argv[1];
 $csource= $srcdir . str_replace('.is', '.c', $ssource);
 
-$state = array(
-    'required' => array(),
-);
+$modulesIndex = array();
+$modulesInitialized = array();
+$inBlock = false;
+$offset = "";
+$entryPoint = '';
+$localVariables = array();
 
-$entryPointName = 'UnknownEntryPoint';
-
-$build_index_list = explode("\n", file_get_contents(getcwd()."/.is/build_index"));
-$build_index = array();
-foreach ($build_index_list as $row) {
-    list($src, $dst) = explode(":", $row);
-    list($moduleFunctionName, $args) = explode(" ", $src, 2);
-    $build_index[$moduleFunctionName] = array(trim($args), $dst);
+function factoryExpression($expression) {
+    if (preg_match('/^("[^"]*")$/',$expression, $matches)) { //string (without excapeing)
+	return array(end($matches), "");
+    }
+    throw new BadExpression($expression);
 }
-unset($build_index_list);
 
+$source = preg_split('/[\r\n]/', file_get_contents($ssource));
+foreach ($source as $row) {
+    $row = trim($row);
 
-$file = fopen($ssource, "r");
-while (($line = fgets($file)) !== false) {
-    $line = trim($line);
-    if (preg_match("/^\#([A-z]+)\s+([A-z0-9]+)\s*(.*)$/", $line, $matches)) {
-        list($all, $directive, $value, $args) = $matches;
-        switch ($directive) {
-	    case 'provide':
-		$entryPointName = $args;
-		break;
-            case 'require':
-                if (preg_match('/^as\s+([A-z0-9_]+)$/', $args, $aliasMatches)) {
-                    if (isset($state['required'][$aliasMatches[1]])) {
-                        doerror("Duplicate require: " . $aliasMatches[1] );
-                        break;
-                    }
-                    $state['required'][$aliasMatches[1]] = array($value);
-                } else {
-                    if (isset($state['required'][$value])) {
-                        doerror("Duplicate require: " . $value);
-                        break;
-                    }
-                    $state['required'][$value] = array($value);
-                }
-		echo "!#include \"$value.h\"\n";
-                break;
-	    default:
-		//nothing
-        }
-    } else if (preg_match('/^([A-z0-9]+)([<>!@#][A-z0-9_]*)\s*([^\{]*)$/', $line, $matches)){
-    //c< "Hello world"    - function call
-	list($full, $module, $method, $arguments) = $matches;
-	$realModule = $state['required'][$module][0];
-	//echo $realModule.$method." ".$arguments."\n";
-	if (isset($build_index[$realModule.$method])) { //это не расширение
-	    $newline = "!" . $build_index[$realModule.$method][1] . "\n";
-	    $args = explode(",", $arguments);
-	    foreach ($args as $id => $value) {
-		$newline = str_replace('ARG'.$id, $value, $newline);
-	    }
-	    echo $newline;
+    //provide
+    if (preg_match('/^#provide\s+(binary|library)\s+([A-z0-9\-\_]+)/', $row, $matches)) {
+	if ($matches[1] == 'binary') {
+	    $entryPoint = trim($matches[2]);
 	}
-    } else if (preg_match('/^([A-z0-9]+)\s+{$/', $line, $matches)) {
-	if($matches[1] == $entryPointName){
-	    echo "!int main(int argc, char* argv[]) {\n";
+	continue;
+    }
+    
+    //require
+    if (preg_match('/^#require\s+(.*)$/', $row, $required)) {
+	$required = end($required); // "cli as c" or "cli"
+	if (preg_match('/^([A-z0-9\-\_]+)\s+as\s+([A-z0-9\-\_]+)$/', $required, $matches)) { // "cli as c"
+	    $module = $matches[1];
+	    $name = $matches[2];
+	    $modulesIndex[$name] = $module;
+	} else if (preg_match('/^([A-z0-9\-\_]+)$/', $required, $matches)) { // "cli"
+	    $module = end($matches);
+	    $modulesIndex[$module] = $module;
+	} else {
+	    badExpression($row, $required);
 	}
-    } else if ($line == "}") {
-	echo "!}\n";
-    } else if ($line == "") {
-	echo "!\n";
-    } else {
-	echo $line."\n";
+	echo "#include \"$module.hpp\"\n";
+	continue;
     }
 
-    //c> fsm {            - function call with block start
-    
-    //tcp<tcp_host<"127.0.0.1"   - property set
-    
+    //block, for example "hello_world {"
+    if (preg_match('/([A-z0-9\-\_]+)\s+{$/', $row, $matches)) {
+	//var_dump($matches);
+	$block = trim(end($matches));
+	if ($entryPoint == $block) {
+	    echo "int main(int argc, char* argv[]) {\n";
+	}
+	$inBlock = true;
+	$offset .= "  ";
+	continue;
+    }
+
+    if (trim($row) == "}") {
+	$inBlock = false;
+	$modulesInitialized[$module] = array();
+	$offset = substr($offset, 0, strlen($offset)-2);
+	echo "}\n";
+	continue;
+    }
+
+    //module operators
+    if (preg_match('/^([A-z0-9\-\_]+)\s*(<|>)\s*(.*)$/', $row, $matches)) {
+	$module = trim($matches[1]);
+	$command = trim($matches[2]);
+	$expression = trim($matches[3]);
+	
+	if (isset($modulesIndex[$module])) {
+	    if (empty($modulesInitialized[$module])) {
+		$modulesInitialized[$module] = true;
+		echo $offset . $modulesIndex[$module] . "_local = " . $modulesIndex[$module] . "::getInstance();\n";
+	    }
+	}
+	
+	//initialize expression
+	list($varName, $printable) = factoryExpression($expression);
+	echo $printable;
+	
+	//run command
+	switch ($command) {
+	    case '<': //cout
+		echo $offset .  $modulesIndex[$module] . "_local.cout($varName);\n";
+		break;
+	    case '>': //cin
+		echo $offset .  "$varName = " . $modulesIndex[$module] . "_local.cin();\n";
+		break;
+	}
+//	var_dump($module, $command, $expression);
+	continue;
+    }
+
+    echo $row . "\n";
 }
+
