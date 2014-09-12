@@ -1,4 +1,4 @@
-implementation_schema
+Implementation Schema
 =====================
 
-Implementation Schema to C translator
+Implementation Schema to C++ translator
