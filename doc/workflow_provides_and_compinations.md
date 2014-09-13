@@ -28,7 +28,7 @@
 
 Сборка:
 
-    $ is hello_world.is hello_world.out hello_world.so hello_world.la hello_world.la hello_world.c
+    $ is hello_world.is hello_world.out hello_world.so hello_world.la hello_world.la hello_world.cpp
 
 Задача:
   Написать бинарик использующий библиотеку lib_hello_world
@@ -45,21 +45,25 @@
 Сборка:
 
     $ is clean
-    $ is add_library hello_world.c
+    $ is add_library hello_world
     $ is hello_world.is hello_world.out
 
 Задача:
-  Написать бинарик использующий библиотеку lib_hello_world с подменой cli на tcp<cli
+  Написать бинарик использующий библиотеку lib_hello_world с подменой cli на вывод в файл
   
 Реализация на Implementation Schema:
 
     #provide binary hello_world
+    #require fileIO
+    #make <>Stream \
+      #with init file_init as file
     #require lib_hello_world \
-      #with_replace cli (<tcp_server tcp_init) as cli
+      #with_replace cli to file
     
-    tcp_init {
-      tcp<tcp_host<"127.0.0.1"
-      tcp<tcp_port<10000
+    file_init with (streamConfig) {
+      streamConfig.preConfigure("<").forStream(fileIO).configure({ "filename":"/tmp/out" })
+      streamConfig.preConfigure(">").forStream(fileIO).configure({ "filename":"/tmp/in" })
+      return streamConfig;
     }
     
     hello_world {
