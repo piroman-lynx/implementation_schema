@@ -23,21 +23,21 @@
     fsm_hello_world {
       c< "Enter 0 or 1"
       c> fsm {
-       "0": fsm_hello
-       "1": fsm_world
-       *: fail
+       "0": fsm_hello(c)
+       "1": fsm_world(c)
+       *: fail(c)
       }
     }
     
-    fail {
+    fail with (c) {
       c< "Not 0 or 1"
     }
     
-    fsm_hello {
+    fsm_hello with (c) {
       c< "Hello"
     }
     
-    fsm_world {
+    fsm_world with (c) {
       c< "World"
     }
 
@@ -47,20 +47,19 @@
 Реализация Implementation Schema:
   
     #provide binary fsm_tcp_hw
-    #require cli (<tcp_server tcp_init) as tcp
-    #require cli as c
+    #require textproto
+    #require tcpServer(forChild<textproto)
     #require fsm as fsm
     
-    tcp_init {
-      tcp<tcp_host<"127.0.0.1"
-      tcp<tcp_port<10000
+    fsm_tcp_hw {
+      tcpServer.configure({ "host":"localhost", "port":1001 }).forPool(tcp_conn)
     }
     
-    fsm_tcp_hw {
-      tcp< "Send 0 or 1"
-      tcp> fsm {
-       "0\n": fsm_hello
-       "1\n": fsm_world
+    tcp_conn with (stream) {
+      stream< "Send 0 or 1"
+      stream> fsm {
+       "0\n": fsm_hello(stream)
+       "1\n": fsm_world(stream)
        *: fail
       }
     }
@@ -73,23 +72,22 @@
 Реализация Implementation Schema:
     
     #provide binary fsm_tcp_hw
-    #require cli (<tcp_server tcp_init (<threads)) tcp_init as tcp
-    #require cli as c
+    #require textproto
     #require fsm as fsm
-    
-    tcp_init {
-      tcp<tcp_host<"127.0.0.1"
-      tcp<tcp_port<10000
-      tcp<threads_max<20
-      tcp<threads_cache<0
-    }
+    #require threadPool(forChild<textproto)
+    #require tcpServer(forChild<threadPool) as tcp
     
     fsm_tcp_hw {
+      pool = threadPool.configure({ "max":20, "prestart":0 }).forOne(tcp_thread)
+      tcp.configure({ "host":"localhost", "port":1001 }).forPool(pool)
+    }
+    
+    tcp_thread with (tcp) {
       tcp< "Send 0 or 1"
       tcp> fsm {
-       "0\n": fsm_hello
-       "1\n": fsm_world
-       *: fail
+       "0\n": fsm_hello(tcp)
+       "1\n": fsm_world(tcp)
+       *: fail(tcp)
       }
     }
     
