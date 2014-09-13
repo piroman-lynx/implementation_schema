@@ -10,9 +10,10 @@ libexec="$RDIR/../libexec/"
 PATH="$PATH:$libexec"
 
 set -e
+mkdir -p .src
+mkdir -p .obj
 is-generate-makefile.php $ssource Makefile.$ssource
 is-generate-c.php $ssource > .obj/$ssource.tmp
-mkdir -p .src
 cp .obj/$ssource.tmp .src/$ssource.cpp
 #set +e
 #if [ "`cat .obj/$ssource.tmp | fgrep -v '!' | wc -l`" != "0" ]; then
@@ -20,6 +21,7 @@ cp .obj/$ssource.tmp .src/$ssource.cpp
 #    cat .obj/$ssource.tmp | fgrep -v '!'
 #fi
 #set -e
-cat .obj/hello_world.is.tmp  | sed -e 's/^!//g' > .src/$csource
+#cat .obj/hello_world.is.tmp  | sed -e 's/^!//g' > .src/$csource
+cp .obj/$ssource.tmp .src/$csource
 
 make -f Makefile.$ssource

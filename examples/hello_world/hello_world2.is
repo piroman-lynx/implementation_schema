@@ -1,0 +1,7 @@
+#provide binary hello_world2
+#require cli
+#require textproto(<cli) as c
+
+hello_world2 {
+  c< "Hello world2"
+}

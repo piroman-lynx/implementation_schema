@@ -8,13 +8,40 @@ $ssource=$argv[1];
 $csource= $srcdir . str_replace('.is', '.c', $ssource);
 
 $modulesIndex = array();
+$modulesInitializers = array();
 $modulesInitialized = array();
 $inBlock = false;
 $offset = "";
 $entryPoint = '';
 $localVariables = array();
 global $iterator;
+global $modulesInitialized;
+global $modulesIndex;
+global $modulesInitializers;
 $iterator=1000;
+
+
+function initializeModule($module) {
+    global $modulesInitialized;
+    global $modulesIndex;
+    global $modulesInitializers;
+    global $iterator;
+
+    $modulesInitialized[$module] = true;
+
+    if (!isset($modulesInitializers[$module])) {
+        return array($modulesIndex[$module] , " (" . $modulesIndex[$module] . "*) " . $modulesIndex[$module] . "::getInstance();\n");
+    }
+    $rmodule = $modulesInitializers[$module];
+    list($class, $code) = initializeModule($rmodule);
+    echo " $class *{$class}_local = $code\n";
+    return array($modulesIndex[$module], " (" . $modulesIndex[$module] . "*) " . $modulesIndex[$module] . "::getInstance({$class}_local);\n");
+}
+
+function BadExpression($expression, $detail1) {
+    error_log( "	BAD EXPRESSION: \n		ROW:	$expression\n		DETAIL:	$detail1\n\n\n", 3, 'php://stderr');
+    exit(1);
+}
 
 function factoryExpression($expression) {
     global $iterator;
@@ -32,7 +59,7 @@ bitPack *$var = new bitPack();
 {$var}->bytes = new char [{$var}->len];
 strcpy({$var}->bytes, $varc);\n");
     }
-    throw new BadExpression($expression);
+    BadExpression($expression);
 }
 
 $source = preg_split('/[\r\n]/', file_get_contents($ssource));
@@ -49,8 +76,13 @@ foreach ($source as $row) {
 
     //require
     if (preg_match('/^#require\s+(.*)$/', $row, $required)) {
-	$required = end($required); // "cli as c" or "cli"
-	if (preg_match('/^([A-z0-9\-\_]+)\s+as\s+([A-z0-9\-\_]+)$/', $required, $matches)) { // "cli as c"
+	$required = end($required); // "cli as c" or "cli" or "cli(<inh) as c"
+	if (preg_match('/^([A-z0-9\-\_]+)\(<(.*)\)\s+as\s+([A-z0-9\-\_]+)$/', $required, $matches)) { // "cli(<inheirt) as c"
+	    $module = $matches[1];
+	    $name = $matches[3];
+	    $modulesIndex[$name] = $module;
+	    $modulesInitializers[end($matches)] = $matches[2];
+	} else if (preg_match('/^([A-z0-9\-\_]+)\s+as\s+([A-z0-9\-\_]+)$/', $required, $matches)) { // "cli as c"
 	    $module = $matches[1];
 	    $name = $matches[2];
 	    $modulesIndex[$name] = $module;
@@ -58,7 +90,7 @@ foreach ($source as $row) {
 	    $module = end($matches);
 	    $modulesIndex[$module] = $module;
 	} else {
-	    badExpression($row, $required);
+	    BadExpression($row, $required);
 	}
 	echo "#include \"$module.hpp\"\n";
 	continue;
@@ -92,10 +124,14 @@ foreach ($source as $row) {
 	
 	if (isset($modulesIndex[$module])) {
 	    if (empty($modulesInitialized[$module])) {
-		$modulesInitialized[$module] = true;
-		echo $offset . $modulesIndex[$module] . "* ". $modulesIndex[$module] . "_local = (".$modulesIndex[$module]."*)" . $modulesIndex[$module] . "::getInstance();\n";
+		
+		list($class, $code) = initializeModule($module);
+		echo $offset . " $class *{$class}_local = $code\n";
 	    }
 	}
+	
+//    echo $offset . $modulesIndex[$module] . "* ". $modulesIndex[$module] . "_local = (".$modulesIndex[$module]."*)" . $modulesIndex[$module] . "::getInstance($parentVar);\n";
+	
 	
 	//initialize expression
 	list($varName, $printable) = factoryExpression($expression);
@@ -116,4 +152,3 @@ foreach ($source as $row) {
 
     echo $row . "\n";
 }
-

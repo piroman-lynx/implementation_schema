@@ -72,7 +72,7 @@ void textproto::cout(bitPack* in) {
 	bitPack pass;
 	pass.len = in->len + sizeof(char)*strlen(ENDL) + sizeof(char);
         pass.bytes = new char [pass.len];
-        printf(pass.bytes, "%s%s", in->bytes, ENDL);
+        sprintf(pass.bytes, "%s%s", in->bytes, ENDL);
         passParent->cout(&pass);
 	delete pass.bytes;
     }

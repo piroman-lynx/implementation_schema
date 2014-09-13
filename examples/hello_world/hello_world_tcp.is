@@ -1,0 +1,14 @@
+#provide binary hello_world_tcp
+//#require threadPool
+#require textproto
+#require tcpServer(forChild<textproto)
+
+hello_world_tcp {
+//    pool = threadPool.configure({ "max":20, "prestart":0 }).forOne(tcp_thread)
+//    tcpServer.configure({ "host":"localhost", "port":1001 }).forPool(pool)
+    tcpServer.configure({ "host":"localhost", "port":1001 }).forPool(tcp_thread)
+}
+
+tcp_thread with (stream) {
+    stream < "Hello and Goodbye!"
+}
